@@ -61,7 +61,6 @@ def solution3():
 
 			if num == num2 and numberAndGearIndex[a][0] != numberAndGearIndex[b][0] and not num in countedGears:
 				countedGears.append(num)
-				print(str(numberAndGearIndex[a]) + " " + str(numberAndGearIndex[b]))
 				sum += (int(numberAndGearIndex[a][0]) * int(numberAndGearIndex[b][0]))
 
 	print(sum)
