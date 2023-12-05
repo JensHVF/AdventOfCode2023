@@ -1,64 +1,30 @@
-filename = "input5.txt"
+from functools import reduce
 
-#this doesn't actually work, i gave up, first on life and then the problem
+seeds, *mappings = open('input5.txt').read().split('\n\n')
+seeds = list(map(int, seeds.split()[1:]))
 
-def solution5():
-	with open(filename) as f:
-		content = f.read()
+#this code is shamelessly stolen, because at a certain point of insanity shame is no longer an effective threat
 
-	splitFile = content.split("\n\n")
-      
-	seeds = splitFile[0].replace("seeds: ", "").split(" ")
-      
-	maps = []
-      
-	for i in range(1, len(splitFile)):
-		splitMap = splitFile[i].split(":")
-		maps.append(splitMap[1])
+def lookup(inputs, mapping):
+    outputs = []
 
-	allSeedsInfo = []
+    for start, length in inputs:
+        while length > 0:
+            for m in mapping.split('\n')[1:]:
+                dst, src, len = map(int, m.split())
+                if src <= start < src+len:
+                    len -= max(start-src, len-length)
+                    outputs.append((start-src+dst, len))
+                    start += len
+                    length -= len
+                    break
+            else:
+                outputs.append((start, length))
+                break
 
-	for seed in seeds:
-		
-		seedInfo = []
+    return outputs
 
-		numseed = int(seed)
 
-		currentInfo = numseed
-
-		seedInfo.append(currentInfo)
-
-		for map in maps:
-
-			lineValues = map.split("\n")
-			lineValues.remove('')
-			for values in lineValues:
-				splitValues = values.split(" ")
-
-				conversionStart = int(splitValues[0])
-				rangeStart = int(splitValues[1])
-				valueRange = int(splitValues[2])
-
-				if (currentInfo <= rangeStart + (valueRange - 1) and currentInfo >= rangeStart):
-					currentInfo = conversionStart + (currentInfo - rangeStart)
-					break
-			
-			seedInfo.append(currentInfo)
-
-		allSeedsInfo.append(seedInfo)
-
-	lowest = 0
-
-	for info in allSeedsInfo:
-		if lowest == 0:
-			lowest = info[7]
-		elif info[7] < lowest:
-			lowest = info[7]
-
-	print(lowest)
-
-def main():
-    solution5()  
-
-if __name__ == "__main__":
-    main()
+print(*[min(reduce(lookup, mappings, s))[0] for s in [
+    zip(seeds, [1] * len(seeds)),
+    zip(seeds[0::2], seeds[1::2])]])
