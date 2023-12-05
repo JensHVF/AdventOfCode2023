@@ -1,22 +1,15 @@
 filename = "input5.txt"
 
+#this doesn't actually work, i gave up, first on life and then the problem
+
 def solution5():
 	with open(filename) as f:
 		content = f.read()
 
 	splitFile = content.split("\n\n")
       
-	splitSeeds = splitFile[0].replace("seeds: ", "").split(" ")
-    
-	seeds = []
-
-	for seed in range(0, len(splitSeeds), 2):
-		seedRange = []
-		seedRange.append(splitSeeds[0])
-		seedRange.append(splitSeeds[1])
-
-		seeds.append(seedRange)
-
+	seeds = splitFile[0].replace("seeds: ", "").split(" ")
+      
 	maps = []
       
 	for i in range(1, len(splitFile)):
@@ -25,43 +18,7 @@ def solution5():
 
 	allSeedsInfo = []
 
-	allExtremesInfo = []
-
-	for i in range (len(seeds)):
-		
-		seedInfo = []
-
-		numseed = seeds[i][1]
-
-		currentInfo = seeds[i][0]
-
-		seedInfo.append(currentInfo)
-
-		for map in maps:
-
-			lineValues = map.split("\n")
-			lineValues.remove('')
-			for values in lineValues:
-				splitValues = values.split(" ")
-
-				conversionStart = int(splitValues[0])
-				rangeStart = int(splitValues[1])
-				valueRange = int(splitValues[2])
-
-				
-
-				if (currentInfo <= rangeStart + (valueRange - 1) and currentInfo >= rangeStart):
-					
-					if (numseed > )
-
-					break
-			
-			seedInfo.append(currentInfo)
-
-		allExtremesInfo.append(seedInfo)
-
-
-	for seed in allExtremesInfo:
+	for seed in seeds:
 		
 		seedInfo = []
 
@@ -88,7 +45,7 @@ def solution5():
 			
 			seedInfo.append(currentInfo)
 
-		allExtremesInfo.append(seedInfo)	
+		allSeedsInfo.append(seedInfo)
 
 	lowest = 0
 
