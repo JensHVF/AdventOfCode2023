@@ -6,8 +6,14 @@ def solution5():
 
 	splitFile = content.split("\n\n")
       
-	seeds = splitFile[0].replace("seeds: ", "").split(" ")
+	seedsLine = splitFile[0].replace("seeds: ", "").split(" ")
       
+	seedsRange = []
+
+	for i in range(0, len(seedsLine), 2):
+		seedsRange.append(int(seedsLine[i + 1]))
+		seedsRange.append(int(seedsLine[i]))
+
 	maps = []
       
 	for i in range(1, len(splitFile)):
@@ -16,34 +22,35 @@ def solution5():
 
 	allSeedsInfo = []
 
-	for seed in seeds:
+	for seed in seedsRange:
+		for i in range(seed[i], seed[i + 1]):
 		
-		seedInfo = []
+			seedInfo = []
 
-		numseed = int(seed)
+			numseed = int(seedsRange[i + 1])
 
-		currentInfo = numseed
+			currentInfo = numseed
 
-		seedInfo.append(currentInfo)
-
-		for map in maps:
-
-			lineValues = map.split("\n")
-			lineValues.remove('')
-			for values in lineValues:
-				splitValues = values.split(" ")
-
-				conversionStart = int(splitValues[0])
-				rangeStart = int(splitValues[1])
-				valueRange = int(splitValues[2])
-
-				if (currentInfo <= rangeStart + (valueRange - 1) and currentInfo >= rangeStart):
-					currentInfo = conversionStart + (currentInfo - rangeStart)
-					break
-			
 			seedInfo.append(currentInfo)
 
-		allSeedsInfo.append(seedInfo)
+			for map in maps:
+
+				lineValues = map.split("\n")
+				lineValues.remove('')
+				for values in lineValues:
+					splitValues = values.split(" ")
+
+					conversionStart = int(splitValues[0])
+					rangeStart = int(splitValues[1])
+					valueRange = int(splitValues[2])
+
+					if (currentInfo <= rangeStart + (valueRange - 1) and currentInfo >= rangeStart):
+						currentInfo = conversionStart + (currentInfo - rangeStart)
+						break
+				
+				seedInfo.append(currentInfo)
+
+			allSeedsInfo.append(seedInfo)
 
 	lowest = 0
 
