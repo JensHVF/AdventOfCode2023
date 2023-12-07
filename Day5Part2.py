@@ -6,61 +6,64 @@ def solution5():
 
 	splitFile = content.split("\n\n")
       
-	seedsLine = splitFile[0].replace("seeds: ", "").split(" ")
+	seeds = splitFile[0].replace("seeds: ", "").split(" ")
+
+	seedRanges = []
+
+	for i in range(0, len(seeds), 2):
+		seedRanges.append(int(seeds[i]))
+		seedRanges.append((int(seeds[i]) + int(seeds[i + 1]) - 1))
+		# print(seedRanges[i])
+		# print(seedRanges[i + 1])
       
-	seedsRange = []
-
-	for i in range(0, len(seedsLine), 2):
-		seedsRange.append(int(seedsLine[i + 1]))
-		seedsRange.append(int(seedsLine[i]))
-
 	maps = []
       
 	for i in range(1, len(splitFile)):
 		splitMap = splitFile[i].split(":")
 		maps.append(splitMap[1])
 
-	allSeedsInfo = []
 
-	for seed in seedsRange:
-		for i in range(seed[i], seed[i + 1]):
-		
-			seedInfo = []
+	c_ranges = [[] for _ in range(0, 8)]
+	c_ranges[0] = seedRanges
 
-			numseed = int(seedsRange[i + 1])
 
-			currentInfo = numseed
+	for i in range(0, len(maps)):
+			
+		for j in range(0, len(c_ranges[i]), 2):
 
-			seedInfo.append(currentInfo)
+			min_value = c_ranges[i][j]
+			max_value = c_ranges[i][j + 1]
 
-			for map in maps:
-
-				lineValues = map.split("\n")
-				lineValues.remove('')
-				for values in lineValues:
-					splitValues = values.split(" ")
-
-					conversionStart = int(splitValues[0])
-					rangeStart = int(splitValues[1])
-					valueRange = int(splitValues[2])
-
-					if (currentInfo <= rangeStart + (valueRange - 1) and currentInfo >= rangeStart):
-						currentInfo = conversionStart + (currentInfo - rangeStart)
-						break
+			mapLine = maps[i].split("\n")
+			mapLine = filter(None, mapLine)
+			for line in mapLine:
+				mapValues = line.split(" ")
 				
-				seedInfo.append(currentInfo)
+				#left value
+				trsln = int(mapValues[0])
+				range_start = int(mapValues[1])
+				range_reach = int(mapValues[2])
+				range_end = range_start + (range_reach - 1)
 
-			allSeedsInfo.append(seedInfo)
+				if (max_value < range_start):
+					continue
+				elif (min_value > range_end):
+					continue
 
-	lowest = 0
+				if (min_value < range_start):
+					new_range_min = min_value
+					new_range_max = range_start - 1
+					c_ranges[i + 1].append(new_range_min)
+					c_ranges[i + 1].append(new_range_max)
+				if (max_value > range_end):
+					new_range_min = range_end + 1
+					c_ranges[i][j + 1] = range_end
+					c_ranges[i + 1].append(new_range_min)
+					c_ranges[i + 1].append(new_range_max)
 
-	for info in allSeedsInfo:
-		if lowest == 0:
-			lowest = info[7]
-		elif info[7] < lowest:
-			lowest = info[7]
 
-	print(lowest)
+	for item in c_ranges:
+		print(item)
 
 def main():
     solution5()  

@@ -52,6 +52,9 @@ def solution7():
 				if len(charsCounts.items()) == 3:
 					sets[2].append(content[i])
 					break
+				elif len(charsCounts.items()) == 2:
+					sets[4].append(content[i])
+					break
 				else:
 					sets[1].append(content[i])
 					break
