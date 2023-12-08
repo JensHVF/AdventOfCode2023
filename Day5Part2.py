@@ -12,7 +12,7 @@ def solution5():
 
 	for i in range(0, len(seeds), 2):
 		seedRanges.append(int(seeds[i]))
-		seedRanges.append((int(seeds[i]) + int(seeds[i + 1]) - 1))
+		seedRanges.append((int(seeds[i]) + int(seeds[i + 1])))
 		# print(seedRanges[i])
 		# print(seedRanges[i + 1])
       
@@ -26,44 +26,54 @@ def solution5():
 	c_ranges = [[] for _ in range(0, 8)]
 	c_ranges[0] = seedRanges
 
+	locations = []
 
-	for i in range(0, len(maps)):
-			
-		for j in range(0, len(c_ranges[i]), 2):
+	ranges = []
 
-			min_value = c_ranges[i][j]
-			max_value = c_ranges[i][j + 1]
+	for i in range(0, len(seedRanges), 2):
+		ranges.append([seedRanges[i], seedRanges[i + 1]])
+		results = []
 
-			mapLine = maps[i].split("\n")
-			mapLine = filter(None, mapLine)
-			for line in mapLine:
-				mapValues = line.split(" ")
+		for _map in maps:
+			while ranges:
 				
-				#left value
-				trsln = int(mapValues[0])
-				range_start = int(mapValues[1])
-				range_reach = int(mapValues[2])
-				range_end = range_start + (range_reach - 1)
+				min_value, max_value = ranges.pop()
 
-				if (max_value < range_start):
-					continue
-				elif (min_value > range_end):
-					continue
+				mapLine = _map.split("\n")
+				mapLine = filter(None, mapLine)
+				for line in mapLine:
+					mapValues = line.split(" ")
+					
+					#left value
+					
+					map_range_start = int(mapValues[1])
+					map_range_reach = int(mapValues[2])
+					trsln = int(mapValues[0]) - map_range_start
 
-				if (min_value < range_start):
-					new_range_min = min_value
-					new_range_max = range_start - 1
-					c_ranges[i + 1].append(new_range_min)
-					c_ranges[i + 1].append(new_range_max)
-				if (max_value > range_end):
-					new_range_min = range_end + 1
-					c_ranges[i][j + 1] = range_end
-					c_ranges[i + 1].append(new_range_min)
-					c_ranges[i + 1].append(new_range_max)
+					map_range_end = map_range_start + (map_range_reach)
 
+					if map_range_end <= min_value or max_value <= map_range_start:
+						continue
 
-	for item in c_ranges:
-		print(item)
+					if (min_value < map_range_start):
+						new_range_min = min_value
+						new_range_max = map_range_start						
+						ranges.append([new_range_min, new_range_max])
+						min_value = map_range_start
+					if (max_value > map_range_end):
+						new_range_min = map_range_end
+						new_range_max = max_value						
+						ranges.append([new_range_min, new_range_max])
+						max_value = map_range_end
+					results.append([new_range_min + trsln, new_range_max + trsln])
+					break
+				else:
+					results.append([new_range_min + trsln, new_range_max + trsln])
+			ranges = results
+			results = []
+	locations += ranges
+
+	print(min(loc[0] for loc in locations))
 
 def main():
     solution5()  
