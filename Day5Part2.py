@@ -6,61 +6,74 @@ def solution5():
 
 	splitFile = content.split("\n\n")
       
-	seedsLine = splitFile[0].replace("seeds: ", "").split(" ")
+	seeds = splitFile[0].replace("seeds: ", "").split(" ")
+
+	seedRanges = []
+
+	for i in range(0, len(seeds), 2):
+		seedRanges.append(int(seeds[i]))
+		seedRanges.append((int(seeds[i]) + int(seeds[i + 1])))
+		# print(seedRanges[i])
+		# print(seedRanges[i + 1])
       
-	seedsRange = []
-
-	for i in range(0, len(seedsLine), 2):
-		seedsRange.append(int(seedsLine[i + 1]))
-		seedsRange.append(int(seedsLine[i]))
-
 	maps = []
       
 	for i in range(1, len(splitFile)):
 		splitMap = splitFile[i].split(":")
 		maps.append(splitMap[1])
 
-	allSeedsInfo = []
 
-	for seed in seedsRange:
-		for i in range(seed[i], seed[i + 1]):
-		
-			seedInfo = []
+	c_ranges = [[] for _ in range(0, 8)]
+	c_ranges[0] = seedRanges
 
-			numseed = int(seedsRange[i + 1])
+	locations = []
 
-			currentInfo = numseed
+	ranges = []
 
-			seedInfo.append(currentInfo)
+	for i in range(0, len(seedRanges), 2):
+		ranges.append([seedRanges[i], seedRanges[i + 1]])
+		results = []
 
-			for map in maps:
-
-				lineValues = map.split("\n")
-				lineValues.remove('')
-				for values in lineValues:
-					splitValues = values.split(" ")
-
-					conversionStart = int(splitValues[0])
-					rangeStart = int(splitValues[1])
-					valueRange = int(splitValues[2])
-
-					if (currentInfo <= rangeStart + (valueRange - 1) and currentInfo >= rangeStart):
-						currentInfo = conversionStart + (currentInfo - rangeStart)
-						break
+		for _map in maps:
+			while ranges:
 				
-				seedInfo.append(currentInfo)
+				min_value, max_value = ranges.pop()
 
-			allSeedsInfo.append(seedInfo)
+				mapLine = _map.split("\n")
+				mapLine = filter(None, mapLine)
+				for line in mapLine:
+					mapValues = line.split(" ")
+					
+					#left value
+					
+					map_range_start = int(mapValues[1])
+					map_range_reach = int(mapValues[2])
+					trsln = int(mapValues[0]) - map_range_start
 
-	lowest = 0
+					map_range_end = map_range_start + (map_range_reach)
 
-	for info in allSeedsInfo:
-		if lowest == 0:
-			lowest = info[7]
-		elif info[7] < lowest:
-			lowest = info[7]
+					if map_range_end <= min_value or max_value <= map_range_start:
+						continue
 
-	print(lowest)
+					if (min_value < map_range_start):
+						new_range_min = min_value
+						new_range_max = map_range_start						
+						ranges.append([new_range_min, new_range_max])
+						min_value = map_range_start
+					if (max_value > map_range_end):
+						new_range_min = map_range_end
+						new_range_max = max_value						
+						ranges.append([new_range_min, new_range_max])
+						max_value = map_range_end
+					results.append([new_range_min + trsln, new_range_max + trsln])
+					break
+				else:
+					results.append([new_range_min + trsln, new_range_max + trsln])
+			ranges = results
+			results = []
+	locations += ranges
+
+	print(min(loc[0] for loc in locations))
 
 def main():
     solution5()  
