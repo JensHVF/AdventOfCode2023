@@ -1,6 +1,6 @@
 def solution8():
 
-    content = open("input8.txt").read().split('\n')
+    content = open("input9.txt").read().split('\n')
 
     final_results = []
 
@@ -35,12 +35,12 @@ def solution8():
 
         final_results.append(result_lists)
 
-    for i in range(0, len(final_results) - 1):
+    for i in range(0, len(final_results)):
         for j in range(len(final_results[i]) - 2, 0, -1):
             # print(final_results[i][j])
             # print(final_results[i][j + 1][-1] + final_results[i][j][-1])
             new_int = final_results[i][j + 1][-1] + final_results[i][j][-1]
-            final_results[i][j].append(new_int)
+            final_results[i][j + 1].append(new_int)
 
     result = 0
     for i in range(0, len(final_results)):
