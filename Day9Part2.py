@@ -40,13 +40,12 @@ def solution9():
         for j in range(len(final_results[i]) - 1, 0, -1):
             # print(final_results[i][j])
             # print(final_results[i][j + 1][-1] + final_results[i][j][-1])
-            new_int = final_results[i][j - 1][-1] + final_results[i][j][-1]
-            final_results[i][j - 1].append(new_int)
+            new_int = final_results[i][j - 1][0] - final_results[i][j][0]
+            final_results[i][j - 1].insert(0, new_int)
 
-        result += final_results[i][0][-1]
+        result += final_results[i][0][0]
 
     print(result)
-
 
 def main():
     solution9() 
